@@ -155,7 +155,7 @@ router.route("/movies/")
             }
             else//if there is no error and there is data which means we found the movie due to the find function
             {
-                if(req.query.reviews === "true") {
+                if(req.query.reviews === "true") {//uses the query in the url from postman as a "variable" of sorts"
                     Movie.aggregate([
                         {
                             $match: {"Title": req.body.Title}//this makes it so the reviews that are printed are only the ones with the same movie title
@@ -194,8 +194,8 @@ router.route("/movies/")
             Title: req.body.Title,
             ReleaseDate: req.body.ReleaseDate,
             Genre: req.body.Genre,
-            ActorsAndCharacters: req.body.ActorsAndCharacters//becasue ActorsAndCharacters is the parent schema for the three actors and characters
-        },function(err, doc)//originally had (err and data) but I needed doc becasuse I had to switch to use Search to have Heroku work
+            ActorsAndCharacters: req.body.ActorsAndCharacters//because ActorsAndCharacters is the parent schema for the three actors and characters
+        },function(err, doc)//originally had (err and data) but I needed doc because I had to switch to use Search to have Heroku work
             {//because Heroku will not work using findOneAndUpdate unless you have .Search and doc, as opposed to .Search and data.length
                 if(err)
                 {
@@ -238,10 +238,9 @@ router.route("/movies/")
 router.route("/review")
     .post(authJwtController.isAuthenticated, function(req, res)
     {
-        let token = req.headers.authorization;//grabs whole jwt token
-        //split string
-        let token2 = token.split(" ");//splits the token into and array
-        let token3 = jwt.verify(token2[1], process.env.SECRET_KEY);//now token 3 is like a hash table (array of user stuff, the user and id..etc)
+        let authorization = req.headers.authorization;//grabs whole jwt token from the authorization variable from postman
+        let authParts = authorization.split(" ");//splits the token into and array of two based on where the seperator
+        let token = jwt.verify(authParts[1], process.env.SECRET_KEY);//now token 3 is a hash table of sorts (array of user stuff, the user and id..etc)
         Movie.findOne({MovieTitle: req.body.MovieTitle}, function (err)
         {//need to figure out how to see if the title equals one in the movie DB
             if (err)
@@ -252,7 +251,7 @@ router.route("/review")
             {
 
                let temprecord = new Review;
-                temprecord.Reviewer = token3.username;
+                temprecord.Reviewer = token.username;
                 temprecord.MovieTitle = req.body.MovieTitle;
                 temprecord.Review = req.body.Review;
                 temprecord.Stars = req.body.Stars;
@@ -291,9 +290,10 @@ router.route("/review")
                 res.json({message: "There was NO review with the title " + req.body.MovieTitle + "."});
             }
             else//if there is no error and there is data which means we found the movie due to the find function
-            {//does not work the way I want it to!!!!!!!!!!!!!
-                res.json({status: 200, message: "The movie with " + req.body.MovieTitle + " does have at least 1 review!"});
-                //figure out how to print all the reviews for the title found
+            {
+                res.json({status: 200, message: "The there are review/s and movies with the title" + req.body.MovieTitle,
+                msg: "IF you want to view the review/s for this title, search this Title in the GetMovie request"});
+
             }
         })
     });
