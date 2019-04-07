@@ -105,7 +105,7 @@ router.post('/signin', function(req, res) {
 //      JUST AN "UNAUTHORIZED" MESSAGE
 
 //need to make sure authHwtController.isAuthenticated is the one used for all the different routes
-router.route("/movies/")
+router.route("/movies")
     .post(authJwtController.isAuthenticated,function(req, res)  //create a new movie
     {//in the function params cannot double up two res's, all four must be different to work
         Movie.findOne({Title: req.body.Title}, function(err)//for whatever reason this only allows one movie into the db at a time
