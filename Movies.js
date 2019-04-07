@@ -12,7 +12,7 @@ var MovieSchema = new Schema ({
     Genre: {type: String, enum: ['Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy', 'Horror', 'Mystery', 'Thriller', 'Western', 'Science Fiction'],
         required: true},
     ActorsAndCharacters:
-        {type:[{Actor: {type: String, required: true}, Character: {type: String, required: true}}]}
+        {type:[{Actor: {type: String, required: true}, Character: {type: String, required: true}}]},
 });
 
 var Movie = mongoose.model("Movie", MovieSchema);

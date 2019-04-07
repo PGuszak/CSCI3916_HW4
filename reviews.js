@@ -7,6 +7,7 @@ mongoose.connect(process.env.DB, { useNewUrlParser: true } );
 mongoose.set('useCreateIndex', true);
 
 var ReviewSchema = new Schema({
+    Reviewer: {type: String, required: true},
     MovieTitle: {type: String, required: true},
     Review: {type: String, required: true},
     Stars: {type: Number, enum: ["1", "2", "3", "4", "5"], required: true}

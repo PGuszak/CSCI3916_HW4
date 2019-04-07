@@ -13,6 +13,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
 var router = express.Router();
 
+//do i need this V??????!!
+//let User = require("./Users");
 let Movie = require("./Movies");//makes the Movie obj work from the Movies.js exports line
 let Review = require('./reviews');
 
@@ -103,7 +105,7 @@ router.post('/signin', function(req, res) {
 //      JUST AN "UNAUTHORIZED" MESSAGE
 
 //need to make sure authHwtController.isAuthenticated is the one used for all the different routes
-router.route("/movies")
+router.route("/movies/")
     .post(authJwtController.isAuthenticated,function(req, res)  //create a new movie
     {//in the function params cannot double up two res's, all four must be different to work
         Movie.findOne({Title: req.body.Title}, function(err)//for whatever reason this only allows one movie into the db at a time
@@ -153,7 +155,33 @@ router.route("/movies")
             }
             else//if there is no error and there is data which means we found the movie due to the find function
             {
-                res.json({status: 200, message: "The movie with " + req.body.Title + " was found!"});
+                if(req.query.reviews === "true") {
+                    Movie.aggregate([
+                        {
+                            $match: {"Title": req.body.Title}//this makes it so the reviews that are printed are only the ones with the same movie title
+                        },
+                        {
+                            $lookup:
+                                {
+                                    from: "reviews",//must be the name of the collection in mongo db!!!
+                                    localField: "Title",
+                                    foreignField: "MovieTitle",
+                                    as: "Movie and Reviews"
+                                }
+                        }
+                    ], function (err, doc)//callback function
+                    {
+                        if (err) {
+                            res.json(err);
+                        } else {
+                            res.json({Review: doc});
+                        }
+                    });
+                }
+                else
+                {
+                    res.json({status: 200, message: "The movie with " + req.body.Title + " was found!"});
+                }
             }
         })
         //res.json({ status: 200, message: "Movie Found", headers: req.headers, query: req.query, env: process.env.SECRET_KEY});
@@ -181,7 +209,6 @@ router.route("/movies")
                 else
                 {
                     res.json({status: 200, message: "The Movie " + req.body.Title + " has been updated!!"});
-
                 }
 
             });
@@ -211,6 +238,10 @@ router.route("/movies")
 router.route("/review")
     .post(authJwtController.isAuthenticated, function(req, res)
     {
+        let token = req.headers.authorization;//grabs whole jwt token
+        //split string
+        let token2 = token.split(" ");//splits the token into and array
+        let token3 = jwt.verify(token2[1], process.env.SECRET_KEY);//now token 3 is like a hash table (array of user stuff, the user and id..etc)
         Movie.findOne({MovieTitle: req.body.MovieTitle}, function (err)
         {//need to figure out how to see if the title equals one in the movie DB
             if (err)
@@ -219,7 +250,9 @@ router.route("/review")
             }
             else if (req.data !== 0)
             {
+
                let temprecord = new Review;
+                temprecord.Reviewer = token3.username;
                 temprecord.MovieTitle = req.body.MovieTitle;
                 temprecord.Review = req.body.Review;
                 temprecord.Stars = req.body.Stars;
@@ -259,11 +292,10 @@ router.route("/review")
             }
             else//if there is no error and there is data which means we found the movie due to the find function
             {//does not work the way I want it to!!!!!!!!!!!!!
-                res.json({status: 200, message: "The movie with " + req.body.MovieTitle + " was found!", msg: "The review is: " + Review.Review + "."});
+                res.json({status: 200, message: "The movie with " + req.body.MovieTitle + " does have at least 1 review!"});
                 //figure out how to print all the reviews for the title found
             }
         })
-        //res.json({message: "reviews .get is working correctly"});
     });
 
 
