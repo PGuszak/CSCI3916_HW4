@@ -239,17 +239,17 @@ router.route("/review")
         let authorization = req.headers.authorization;//grabs whole jwt token from the authorization variable from postman
         let authParts = authorization.split(" ");//splits the token into and array of two based on where the seperator
         let token = jwt.verify(authParts[1], process.env.SECRET_KEY);//now token 3 is a hash table of sorts (array of user stuff, the user and id..etc)
-        Movie.find({MovieTitle: req.body.MovieTitle}, function (err, data)
+        Movie.findOne({MovieTitle: req.body.MovieTitle}, function (err, data)
         {//need to figure out how to see if the title equals one in the movie DB
-            if (err)//if there is any err, print the err and response message
+            if (err)
             {
-                res.json({msg: err, message: "There was an issue trying to find your movie"})
+                res.json(err);
             }
-            else if (data.length === 0)//if there is no return of data the movie was not found
-            {   //don't think this is correct
-                res.json({message: "The Movie " + req.body.Title + " was not found"});
+            else if(data.length !== 0)
+            {
+                res.json({msg: "That movie does not exist"});
             }
-            else
+            else if (req.data !== 0)
             {
 
                let temprecord = new Review;
@@ -270,6 +270,10 @@ router.route("/review")
                     }
                 })
 
+            }
+            else
+            {
+                res.json({message: "There was an issue"});
             }
 
         });
