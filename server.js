@@ -245,11 +245,7 @@ router.route("/review")
             {
                 res.json(err);
             }
-            else if(data.length !== 0)
-            {
-                res.json({msg: "That movie does not exist"});
-            }
-            else if (req.data !== 0)
+            else if (data !== null)
             {
 
                let temprecord = new Review;
@@ -273,7 +269,7 @@ router.route("/review")
             }
             else
             {
-                res.json({message: "There was an issue"});
+                res.json({message: "That movie does not exist"});
             }
 
         });
