@@ -239,16 +239,16 @@ router.route("/review")
         let authorization = req.headers.authorization;//grabs whole jwt token from the authorization variable from postman
         let authParts = authorization.split(" ");//splits the token into and array of two based on where the seperator
         let token = jwt.verify(authParts[1], process.env.SECRET_KEY);//now token 3 is a hash table of sorts (array of user stuff, the user and id..etc)
-        Movie.findOne({MovieTitle: req.body.MovieTitle}, function (err, data)
+        Movie.find({MovieTitle: req.body.MovieTitle}, function (err, data)
         {//need to figure out how to see if the title equals one in the movie DB
             if (err)
             {
                 res.json(err);
             }
-            /*else if (data.length === null)
+            else if (data.length === null)
             {
                 res.json({message: "Reviews are not posted unless that movie exists in the database!"})
-            }*/
+            }
             else if (req.data !== 0)
             {
 
