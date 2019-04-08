@@ -245,7 +245,11 @@ router.route("/review")
             {
                 res.json(err);
             }
+<<<<<<< HEAD
             /*else if (data.length === null)
+=======
+            else if (data.length === null)
+>>>>>>> 22524ca77f96b5aaa87acf1c53116972a371f872
             {
                 res.json({message: "Reviews are not posted unless that movie exists in the database!"})
             }*/
