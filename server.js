@@ -241,15 +241,15 @@ router.route("/review")
         let token = jwt.verify(authParts[1], process.env.SECRET_KEY);//now token 3 is a hash table of sorts (array of user stuff, the user and id..etc)
         Movie.find({MovieTitle: req.body.MovieTitle}, function (err, data)
         {//need to figure out how to see if the title equals one in the movie DB
-            if (err)
+            if (err)//if there is any err, print the err and response message
             {
                 res.json(err);
             }
-            else if (data.length === null)
+            else if (data.length === 0)//if there is no return of data the movie was not found
             {
-                res.json({message: "Reviews are not posted unless that movie exists in the database!"})
+                res.json({message: "The Movie " + req.body.Title + " was not found"});
             }
-            else if (req.data !== 0)
+            else
             {
 
                let temprecord = new Review;
