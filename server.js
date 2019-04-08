@@ -243,10 +243,10 @@ router.route("/review")
         {//need to figure out how to see if the title equals one in the movie DB
             if (err)//if there is any err, print the err and response message
             {
-                res.json(err);
+                res.json({msg: err, message: "There was an issue trying to find your movie"})
             }
             else if (data.length === 0)//if there is no return of data the movie was not found
-            {
+            {   //don't think this is correct
                 res.json({message: "The Movie " + req.body.Title + " was not found"});
             }
             else
@@ -270,10 +270,6 @@ router.route("/review")
                     }
                 })
 
-            }
-            else
-            {
-                res.json({message: "There was an issue"});
             }
 
         });
