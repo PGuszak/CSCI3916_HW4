@@ -95,8 +95,6 @@ router.post('/signin', function(req, res) {
                 res.status(401).send({success: false, message: 'Authentication failed.'});
             }
         });
-
-
     });
 });
 
