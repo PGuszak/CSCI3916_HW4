@@ -307,7 +307,7 @@ router.all('*', function(req, res)  //if there is a response that the server has
 app.use('/', router);
 app.listen(process.env.PORT || 8080);
 
-module.exports = app;
+//module.exports = app;
 
 //need to connect to mongoose some how here
 /*mongoose.connect(mongoDB, { useNewUrlParser: true },
