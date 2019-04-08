@@ -246,7 +246,7 @@ router.route("/review")
             {
                 res.json(err);
             }
-            else if (data.length !== 0)
+            else if (data !== null)
             {
 
                let temprecord = new Review;
