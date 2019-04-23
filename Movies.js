@@ -7,13 +7,13 @@ mongoose.connect(process.env.DB, { useNewUrlParser: true },function(err){if(err)
 mongoose.set('useCreateIndex', true);
 
 var MovieSchema = new Schema ({
-    Title: {type: String, required: true},
-    ReleaseDate: {type: Number, required: true},
+    title: {type: String, required: true},
+    releaseDate: {type: Number, required: true},
     Genre: {type: String, enum: ['Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy', 'Horror', 'Mystery', 'Thriller', 'Western', 'Science Fiction'],
         required: true},
     actors:
         {type:[{actorName: {type: String, required: true}, characterName: {type: String, required: true}}]},
-    PhotoLink: {type: String, required: true}
+    imageUrl: {type: String, required: true}
 
 });
 

@@ -121,11 +121,11 @@ router.route("/movies")
             else if (req.data !== 0) {
                 //do i need to change the schema and add "Reviews as T/F"  !!!!????
                 let newmovie = new Movie;
-                newmovie.Title = req.body.Title;
-                newmovie.ReleaseDate = req.body.ReleaseDate;
+                newmovie.title = req.body.title;
+                newmovie.releaseDate = req.body.releaseDate;
                 newmovie.Genre = req.body.Genre;
                 newmovie.actors = req.body.actors;
-                newmovie.PhotoLink = req.body.PhotoLink;
+                newmovie.imageUrl = req.body.imageUrl;
                 newmovie.save(function (err)
                 {
                     if (err)
@@ -197,7 +197,7 @@ router.route("/movies")
         Movie.findOneAndUpdate({Title: req.body.Title},//originally had .Title but it didn't work with the function(doc)
         {
             Title: req.body.Title,
-            ReleaseDate: req.body.ReleaseDate,
+            releaseDate: req.body.releaseDate,
             Genre: req.body.Genre,
             ActorsAndCharacters: req.body.ActorsAndCharacters//because ActorsAndCharacters is the parent schema for the three actors and characters
         },function(err, doc)//originally had (err and data) but I needed doc because I had to switch to use Search to have Heroku work
@@ -222,7 +222,7 @@ router.route("/movies")
     })
     .delete(authJwtController.isAuthenticated, function(req, res)//delete a movie
     {
-        Movie.findOneAndDelete({Title: req.body.Title}, function(err, data)//got this code from the get request method
+        Movie.findOneAndDelete({Title: req.body.title}, function(err, data)//got this code from the get request method
         {
             if (err)
             {
@@ -231,11 +231,11 @@ router.route("/movies")
             }
             else if (data.length === null)
             {   //don't think this is correct
-                res.json({message: "The Movie " + req.body.Title + " was not found"});
+                res.json({message: "The Movie " + req.body.title + " was not found"});
             }
             else//if there is no error and the movie is not found
             {
-                res.json({message: "The movie with " + req.body.Title + " was deleted!"});
+                res.json({message: "The movie with " + req.body.title + " was deleted!"});
             }
         })
     });
