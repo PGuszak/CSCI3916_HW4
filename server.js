@@ -142,7 +142,7 @@ router.route("/movies")
     })
     .get(authJwtController.isAuthenticated,function(req,res)//search for a movie
     {
-        if(req.query.movieId !== null)
+        if(req.query.movieId != null)
         {
             Movie.find({_id: req.query.movieId}, function (err, data) {
                 if (err)//if there is any err, print the err and response message
