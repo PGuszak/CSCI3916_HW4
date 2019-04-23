@@ -259,8 +259,8 @@ router.route("/review")
                let temprecord = new Review;
                 temprecord.Reviewer = token.username;
                 temprecord.MovieTitle = req.body.MovieTitle;
-                temprecord.Review = req.body.Review;
-                temprecord.Stars = req.body.Stars;
+                temprecord.review = req.body.review;
+                temprecord.rating = req.body.rating;
                 temprecord.save(function(err)
                 {
                     if(err)
