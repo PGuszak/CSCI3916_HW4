@@ -9,7 +9,7 @@ var cors = require("cors");
 var app = express();
 module.exports = app; // for testing
 app.use(bodyParser.json());
-app.use(cors);
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(passport.initialize());
