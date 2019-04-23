@@ -142,48 +142,53 @@ router.route("/movies")
     })
     .get(authJwtController.isAuthenticated,function(req,res)//search for a movie
     {
-        Movie.find({Title: req.body.Title}, function(err, data)
+        if(req.query.movieId !== null)
         {
-            if (err)//if there is any err, print the err and response message
-            {
-                res.json(err);
-                res.json({message: "There was an issue trying to find your movie"})
-            }
-            else if (data.length === 0)//if there is no return of data the movie was not found
-            {   //don't think this is correct
-                res.json({message: "The Movie " + req.body.Title + " was not found"});
-            }
-            else//if there is no error and there is data which means we found the movie due to the find function
-            {
-                if(req.query.reviews === "true") {//uses the query in the url from postman as a "variable" of sorts"
-                    Movie.aggregate([
-                        {
-                            $match: {"Title": req.body.Title}//this makes it so the reviews that are printed are only the ones with the same movie title
-                        },
-                        {
-                            $lookup:
-                                {
-                                    from: "reviews",//must be the name of the collection in mongo db!!!
-                                    localField: "Title",
-                                    foreignField: "MovieTitle",
-                                    as: "Movie and Reviews"
-                                }
-                        }
-                    ], function (err, doc)//callback function
-                    {
-                        if (err) {
-                            res.json(err);
-                        } else {
-                            res.json({Review: doc});
-                        }
-                    });
-                }
-                else
+            Movie.find({_id: req.query.movieId}, function (err, data) {
+                if (err)//if there is any err, print the err and response message
                 {
-                    res.json({status: 200, message: "The movie with " + req.body.Title + " was found!"});
+                    res.json(err);
+                    res.json({message: "There was an issue trying to find your movie"})
+                } else if (data.length === 0)//if there is no return of data the movie was not found
+                {   //don't think this is correct
+                    res.json({message: "The Movie " + req.body.Title + " was not found"});
+                } else//if there is no error and there is data which means we found the movie due to the find function
+                {
+                    if (req.query.reviews === "true") {//uses the query in the url from postman as a "variable" of sorts"
+                        Movie.aggregate([
+                            {
+                                $match: {"Title": req.body.Title}//this makes it so the reviews that are printed are only the ones with the same movie title
+                            },
+                            {
+                                $lookup:
+                                    {
+                                        from: "reviews",//must be the name of the collection in mongo db!!!
+                                        localField: "Title",
+                                        foreignField: "MovieTitle",
+                                        as: "Movie and Reviews"
+                                    }
+                            }
+                        ], function (err, doc)//callback function
+                        {
+                            if (err) {
+                                res.json(err);
+                            } else {
+                                res.json({Review: doc});
+                            }
+                        });
+                    } else {
+                        res.json({status: 200, message: "The movie with " + req.body.Title + " was found!"});
+                    }
                 }
-            }
-        })
+            })
+        }
+        else
+        {
+            Movie.find({}, function(err, movieList)//sends all the movies in the data feild
+            {
+                res.json(movieList);
+            })
+        }
         //res.json({ status: 200, message: "Movie Found", headers: req.headers, query: req.query, env: process.env.SECRET_KEY});
         //just use the find function from above and print out if there is a record that is found.
     })
