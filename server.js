@@ -4,10 +4,12 @@ var passport = require('passport');
 var authJwtController = require('./auth_jwt');
 var User = require('./Users');
 var jwt = require('jsonwebtoken');
+var cors = require("cors");
 
 var app = express();
 module.exports = app; // for testing
 app.use(bodyParser.json());
+app.use(cors);
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(passport.initialize());
@@ -123,7 +125,7 @@ router.route("/movies")
                 newmovie.ReleaseDate = req.body.ReleaseDate;
                 newmovie.Genre = req.body.Genre;
                 newmovie.ActorsAndCharacters = req.body.ActorsAndCharacters;
-
+                newmovie.PhotoLink = req.body.PhotoLink;
                 newmovie.save(function (err)
                 {
                     if (err)

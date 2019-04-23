@@ -13,6 +13,8 @@ var MovieSchema = new Schema ({
         required: true},
     ActorsAndCharacters:
         {type:[{Actor: {type: String, required: true}, Character: {type: String, required: true}}]},
+    PhotoLink: {type: String, required: true}
+
 });
 
 var Movie = mongoose.model("Movie", MovieSchema);
