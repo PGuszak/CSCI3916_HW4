@@ -165,7 +165,7 @@ router.route("/movies")
                                         from: "reviews",//must be the name of the collection in mongo db!!!
                                         localField: "title",
                                         foreignField: "MovieTitle",
-                                        as: "Movie and Reviews"
+                                        as: "reviews"
                                     }
                             }
                         ], function (err, doc)//callback function
