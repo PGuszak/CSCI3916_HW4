@@ -124,7 +124,7 @@ router.route("/movies")
                 newmovie.title = req.body.title;
                 newmovie.releaseDate = req.body.releaseDate;
                 newmovie.Genre = req.body.Genre;
-                newmovie.actors = req.body.actor;
+                newmovie.actor = req.body.actor;
                 newmovie.imageUrl = req.body.imageUrl;
                 newmovie.save(function (err)
                 {
