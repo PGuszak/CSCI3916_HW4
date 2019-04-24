@@ -157,7 +157,7 @@ router.route("/movies")
                     if (req.query.reviews === "true") {//uses the query in the url from postman as a "variable" of sorts"
                         Movie.aggregate([
                             {
-                                $match: {"Title": req.body.title}//this makes it so the reviews that are printed are only the ones with the same movie title
+                                $match: {"Title": req.query.movieId}//this makes it so the reviews that are printed are only the ones with the same movie title
                             },
                             {
                                 $lookup:
