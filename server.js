@@ -114,7 +114,7 @@ router.route("/movies")
             {
                 res.status(400);
             }
-            else if(req.body.actor.length < 3)
+            else if(req.body.actors.length < 3)
             {
                 res.json({message: "You must have at least 3 actors and characters per movie!"});
             }
@@ -124,7 +124,7 @@ router.route("/movies")
                 newmovie.title = req.body.title;
                 newmovie.releaseDate = req.body.releaseDate;
                 newmovie.Genre = req.body.Genre;
-                newmovie.actor = req.body.actor;
+                newmovie.actors = req.body.actors;
                 newmovie.imageUrl = req.body.imageUrl;
                 newmovie.save(function (err)
                 {
@@ -157,13 +157,13 @@ router.route("/movies")
                     if (req.query.reviews === "true") {//uses the query in the url from postman as a "variable" of sorts"
                         Movie.aggregate([
                             {
-                                $match: {"Title": req.body.Title}//this makes it so the reviews that are printed are only the ones with the same movie title
+                                $match: {"Title": req.body.title}//this makes it so the reviews that are printed are only the ones with the same movie title
                             },
                             {
                                 $lookup:
                                     {
                                         from: "reviews",//must be the name of the collection in mongo db!!!
-                                        localField: "Title",
+                                        localField: "title",
                                         foreignField: "MovieTitle",
                                         as: "Movie and Reviews"
                                     }
@@ -199,7 +199,7 @@ router.route("/movies")
             Title: req.body.Title,
             releaseDate: req.body.releaseDate,
             Genre: req.body.Genre,
-            ActorsAndCharacters: req.body.ActorsAndCharacters//because ActorsAndCharacters is the parent schema for the three actors and characters
+            actors: req.body.actors//because ActorsAndCharacters is the parent schema for the three actors and characters
         },function(err, doc)//originally had (err and data) but I needed doc because I had to switch to use Search to have Heroku work
             {//because Heroku will not work using findOneAndUpdate unless you have .Search and doc, as opposed to .Search and data.length
                 if(err)
