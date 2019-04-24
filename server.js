@@ -114,7 +114,7 @@ router.route("/movies")
             {
                 res.status(400);
             }
-            else if(req.body.ActorsAndCharacters.length < 3)
+            else if(req.body.actor.length < 3)
             {
                 res.json({message: "You must have at least 3 actors and characters per movie!"});
             }
@@ -124,7 +124,7 @@ router.route("/movies")
                 newmovie.title = req.body.title;
                 newmovie.releaseDate = req.body.releaseDate;
                 newmovie.Genre = req.body.Genre;
-                newmovie.actors = req.body.actors;
+                newmovie.actors = req.body.actor;
                 newmovie.imageUrl = req.body.imageUrl;
                 newmovie.save(function (err)
                 {
