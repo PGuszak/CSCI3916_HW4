@@ -184,9 +184,20 @@ router.route("/movies")
         }
         else
         {
-            Movie.find({}, function(err, movieList)//sends all the movies in the data feild
+            Movie.find({}, function(err, movieListGarbage)//sends all the movies in the data feild
             {
-                res.json(movieList);
+                Movie.aggregate(
+                    {
+                        $lookup:
+                            {
+                                from: "reviews",//must be the name of the collection in mongo db!!!
+                                localField: "title",
+                                foreignField: "MovieTitle",
+                                as: "reviews"
+                            }
+                    },function (err, movieList){
+                        res.json(movieList);
+                    });
             })
         }
         //res.json({ status: 200, message: "Movie Found", headers: req.headers, query: req.query, env: process.env.SECRET_KEY});
