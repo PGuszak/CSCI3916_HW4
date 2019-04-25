@@ -175,7 +175,7 @@ router.route("/movies")
                             if (err) {
                                 res.json(err);
                             } else {
-                                res.json({Review: doc});
+                                res.json(doc);
                             }
                         });
                     } else {
