@@ -5,6 +5,7 @@ var authJwtController = require('./auth_jwt');
 var User = require('./Users');
 var jwt = require('jsonwebtoken');
 var cors = require("cors");
+var mongoose = require('mongoose');
 
 var app = express();
 module.exports = app; // for testing
@@ -144,7 +145,7 @@ router.route("/movies")
     {
         if(req.query.movieId != null)
         {
-            Movie.find({_id: req.query.movieId}, function (err, data) {
+            Movie.find({_id: mongoose.Types.ObjectId(req.query.movieId)}, function (err, data) {
                 if (err)//if there is any err, print the err and response message
                 {
                     res.json(err);
@@ -152,12 +153,13 @@ router.route("/movies")
                 } else if (data.length === 0)//if there is no return of data the movie was not found
                 {   //don't think this is correct
                     res.json({message: "The Movie " + req.body.Title + " was not found"});
-                } else//if there is no error and there is data which means we found the movie due to the find function
+                }
+                else//if there is no error and there is data which means we found the movie due to the find function
                 {
                     if (req.query.reviews === "true") {//uses the query in the url from postman as a "variable" of sorts"
                         Movie.aggregate([
                             {
-                                $match: {"_id": req.query.movieId}//this makes it so the reviews that are printed are only the ones with the same movie title
+                                $match: {"_id": mongoose.Types.ObjectId(req.query.movieId)}//this makes it so the reviews that are printed are only the ones with the same movie title
                             },
                             {
                                 $lookup:
@@ -272,7 +274,7 @@ router.route("/review")
         let authParts = authorization.split(" ");//splits the token into and array of two based on where the seperator
         let token = jwt.verify(authParts[1], process.env.SECRET_KEY);//now token 3 is a hash table of sorts (array of user stuff, the user and id..etc)
 
-        Movie.findOne({_Id: req.query._id}, function (err, data)
+        Movie.findOne({title: req.body.MovieTitle}, function (err, data)
         {//need to figure out how to see if the title equals one in the movie DB
             if (err)
             {
